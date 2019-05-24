@@ -3,6 +3,8 @@
 export(experimental_data_processing)
 export(fit_quality)
 export(makeFakeParams)
+export(model_diagnostics)
+export(models_plots)
 export(parameter_extraction)
 export(saveit)
 export(simulDat)
