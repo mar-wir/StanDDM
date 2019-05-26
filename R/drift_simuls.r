@@ -13,7 +13,7 @@
 #' \code{1} should be used. The implemented likelihood in Stan is calibrated to that value. When using parameters 
 #' fitted with a Ratcliff procedure, then this value should be set to \code{0.1}.
 #' @return A data frame with two columns, 'rt' and 'response', as long as 'samples'.
-drift_simuls <- function(params, samples = 1000, dt = 1e-04, intra_sv = 1){
+drift_simuls <- function(params, samples = 500, dt = 1e-04, intra_sv = 1){
     params <- as.list(params)
     nn <- 1000
     a <- params[['a']]

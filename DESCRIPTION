@@ -7,5 +7,5 @@ Depends: R (>= 3.4.4)
 License: MIT
 Encoding: UTF-8
 LazyData: true
-Imports: rstan, StanHeaders, rstantools, data.table, plyr, reshape2, devtools, tidyverse
+Imports: rstan, StanHeaders, rstantools, data.table, plyr, reshape2, devtools, tidyverse, magrittr
 RoxygenNote: 6.1.1

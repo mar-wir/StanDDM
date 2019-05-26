@@ -4,7 +4,7 @@
 \alias{drift_simuls}
 \title{Drift Diffusion Data Simulation}
 \usage{
-drift_simuls(params, samples = 1000, dt = 1e-04, intra_sv = 1)
+drift_simuls(params, samples = 500, dt = 1e-04, intra_sv = 1)
 }
 \arguments{
 \item{params}{A list of parameters which should at least contain 'a', 'v', 'z' and 't'. Inter trial variabilities 
