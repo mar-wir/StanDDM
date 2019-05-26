@@ -8,7 +8,7 @@
 #' Mind that the data needs to be in a long and tidy format.
 #' As of now, this function has to be manually modified to change to stimuli fitting.
 #' @export
-#' @param experimental_data Data frame or tibble. Mind the required columns and names.
+#' @param a Data frame or tibble. Mind the required columns and names.
 #' @return Returns a list with two entries: "forstan" is the data in the correct format to be used in fitting. "forsim" is for data simulation.
 experimental_data_processing <- function(a){
     #Adapted from Ahn et al.
@@ -17,7 +17,7 @@ experimental_data_processing <- function(a){
     SUB <- length(levels(a$suj))#amount of subjects
     names <- levels(a$suj) #<- 1:SUB
     
-    aggreg <- ddply(a, c('suj'), summarise, freq = length(rt), .drop = FALSE )
+    aggreg <- plyr::ddply(a, c('suj'), summarise, freq = length(rt), .drop = FALSE )
     dat_amt <- aggreg$freq #vector with amount of data per subject
     
     N_min <- min(aggreg$freq) # min amount of data
@@ -31,10 +31,10 @@ experimental_data_processing <- function(a){
     a <- a[c('suj', 'rt', 'crit', 'cor')]  
     a$rt[a$rt<0.2] <- 0.2 #lowest amount of RT that works
     
-    Nu <- ddply(a, c('suj'), summarise, value = sum(crit==1), .drop = FALSE )$value 
-    Nl <- ddply(a, c('suj'), summarise, value = sum(crit==0), .drop = FALSE )$value 
+    Nu <- plyr::ddply(a, c('suj'), summarise, value = sum(crit==1), .drop = FALSE )$value 
+    Nl <- plyr::ddply(a, c('suj'), summarise, value = sum(crit==0), .drop = FALSE )$value 
     
-    minRT <- ddply(a, c('suj'), summarise, value = min(rt), .drop = FALSE )$value #min RT per subject
+    minRT <- plyr::ddply(a, c('suj'), summarise, value = min(rt), .drop = FALSE )$value #min RT per subject
     
     # Reaction times for upper and lower boundary responses, PADDED matrices
     RTu <- array(-1, c(SUB, max(Nu)))

@@ -2,7 +2,10 @@
 #' 
 #' This is the main function, which calles all models defined in "include" and applies all Stan sampler
 #' arguments to the fitting.
-#' 
+#' @import tidyverse data.table ggplot2 
+#' @importFrom magrittr %>% %<>%
+#' @importFrom plyr ddply 
+#' @importFrom purrr map map2 walk2
 #' @export
 #' @param data If simulations are not done (\code{simulation = FALSE}), then a data frame with decision-making
 #' data has to be provided. Required columns are 'suj' (subject ID), 'rt' (reaction times in seconds), 'crit' for the 

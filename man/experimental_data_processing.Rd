@@ -7,7 +7,7 @@
 experimental_data_processing(a)
 }
 \arguments{
-\item{experimental_data}{Data frame or tibble. Mind the required columns and names.}
+\item{a}{Data frame or tibble. Mind the required columns and names.}
 }
 \value{
 Returns a list with two entries: "forstan" is the data in the correct format to be used in fitting. "forsim" is for data simulation.
