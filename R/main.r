@@ -6,6 +6,8 @@
 #' @importFrom magrittr %>% %<>%
 #' @importFrom plyr ddply 
 #' @importFrom purrr map map2 walk2
+#' @importFrom stats cor lm qnorm quantile rnorm rt runif sd 
+#' @importFrom utils data install.packages tail write.csv 
 #' @export
 #' @param data If \code{simulation = FALSE}, then a data frame with decision-making
 #' data has to be provided. Check the 'example_data' provided with the package.
