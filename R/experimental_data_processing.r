@@ -1,17 +1,36 @@
 #' Experimental Data Processing
 #' 
 #' Read in and process experimental data for model fitting. It is assumed that there is at least 1 
-#' response per side (left/right)! Else, this function will not work and throw a 
-#' "replacement has length zero" error.
+#' response per side (left/right)! Else, this function will not work!
 #' The column structure of the data has to be following:
 #' SUBJECT_ID, REACTION TIME, STIMULI SIDE (alternatively ANSWER SIDE), CORRECTNESS OF RESPONSE
-#' Mind that the data needs to be in a long and tidy format.
-#' As of now, this function has to be manually modified to change to stimuli fitting.
+#' Mind that the data needs to be in a long and tidy format. The data processing is inspired by Ahn et al.'s 
+#' procedure.  
 #' @export
-#' @param a Data frame or tibble. Mind the required columns and names.
-#' @return Returns a list with two entries: "forstan" is the data in the correct format to be used in fitting. "forsim" is for data simulation.
+#' @references hBayesDM Package and paper: \url{https://www.ncbi.nlm.nih.gov/pubmed/29601060}
+#' @param a Data frame or tibble. Mind the required columns and names. 
+#' See the example data set with \code{StanDDM::example_data}
+#' @return Returns a list with two entries: "forstan" is the data in the correct format to be used in fitting. 
+#' "forsim" is for data simulation.
 experimental_data_processing <- function(a){
-    #Adapted from Ahn et al.
+    
+     if(!('suj' %in% names(a) & 'rt' %in% names(a) & 'cor' %in% names(a) & 
+         'crit' %in% names(a))){
+        stop('\n\nThe provided data has not the correct column names or lacks one or more columns. 
+Please run "StanDDM:example_data" to see how the correct format looks like.\n')
+     }
+    
+    onsiders <- a %>% 
+        group_by(suj) %>% summarise(mean = 
+                                        mean(as.numeric(as.character(crit)))) %>% 
+        filter(mean == 0 | mean == 1) %>% 
+        rownames() %>% length()
+    
+    if(onsiders > 0){
+        stop('\n\nOne or more subjects in the provided data only features one type of responses
+(only 0s or 1s). If you simulated this data with "simulDat", try to increase the amount of trials
+(increase the argument "n") or alternatively, re-run the simulations.\n')
+    }
     
     a$suj <- as.factor(a$suj)
     SUB <- length(levels(a$suj))#amount of subjects

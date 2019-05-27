@@ -34,6 +34,19 @@ simulDat <- function(..., n = 1000){
         cor <- sims %>% map('response') %>% data.table::melt()
         
         sims <- data.frame('suj'=as.factor(rts$L1), 'rt'=rts$value, 'cor'= as.factor(cor$value), 'cond'='Sim')
+        
+        onsiders <- sims %>% 
+            group_by(suj) %>% summarise(mean = 
+                                            mean(as.numeric(as.character(cor)))) %>% 
+            filter(mean == 0 | mean == 1) %>% 
+            rownames() %>% length()
+        
+        if(onsiders > 0){
+            warning('\n\nOne or more subjects in the provided data only features one type of responses
+(only 0s or 1s). This data set will not be able to be processed by "experimental_data_processing"
+and cannot be fit.\n')
+        }
+        
         list(params=params, data=sims) 
     }
     

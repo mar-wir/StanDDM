@@ -9,10 +9,11 @@ StanDDM(data = NULL, include_models = c(), num_cores = 4,
   adapt_delta = 0.85, max_treedepth = 30)
 }
 \arguments{
-\item{data}{If simulations are not done (\code{simulation = FALSE}), then a data frame with decision-making
-data has to be provided. Required columns are 'suj' (subject ID), 'rt' (reaction times in seconds), 'crit' for the 
+\item{data}{If \code{simulation = FALSE}, then a data frame with decision-making
+data has to be provided. Check the 'example_data' provided with the package.
+Required columns are 'suj' (subject ID), 'rt' (reaction times in seconds), 'crit' for the 
 diffusion criteria (accuracy coding or stimuli coding, more info on the github readme) and 'cor' (correct or 
-incorrect answer). See the github readme for a example.}
+incorrect answer).}
 
 \item{include_models}{A vector of strings to indicate which models should be fitted to the data or used in 
 the simulations. 'Pure', 'st', 'sv', 'sz', 'sv_sz', 'st_sv', 'sz_st' and 'sv_sz_st' can be included in any order.
@@ -35,16 +36,17 @@ to accomodate rig capacities and model properties.}
 to accomodate rig capacities and model properties.}
 
 \item{stepsize}{Initial NUTS step-size. Will adapt after a some iterations. Adjust to own parameter space
-if necessary. See Stan manual for more information.}
+if necessary. See the \href{https://mc-stan.org/docs/2_18/reference-manual/hmc-chapter.html}{Stan Manual} for more information.}
 
-\item{adapt_delta}{See Stan manual for more information.}
+\item{adapt_delta}{See the \href{https://mc-stan.org/docs/2_18/reference-manual/hmc-chapter.html}{Stan Manual} for more information.}
 
-\item{max_treedepth}{See Stan manual for more information.}
+\item{max_treedepth}{See the \href{https://mc-stan.org/docs/2_18/reference-manual/hmc-chapter.html}{Stan Manual} for more information.}
 }
 \value{
-Returns a list of Data Frames with simulated data. Or alternatively, a list of 1
+Calls the defined models, which will return a stanfit object, save plots on memory and show RMSE and R^2 values.
+If \code{simulation = TRUE}, additional plots will be saved for checking how well parameters were recovered.
 }
 \description{
-This is the main function, which calles all models defined in "include" and applies all Stan sampler
-arguments to the fitting.
+Will fit or simulate all models defined in "include" and apply all Stan sampler
+arguments.
 }
