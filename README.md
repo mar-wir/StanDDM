@@ -8,7 +8,9 @@ StanDDM
 
 #### What is this package?
 
-This R package contains a Multi-Level Bayesian fitting procedure for (Perceptual) Decision-Making Data and a collection of several Drift Diffusion Models, implemented in the probabilistic programming language Stan (Carpenter et al. 2017). It has been inspired by other packages, like "hBayesDM" (Ahn, Haines, and Zhang 2016) and "HDDM" (Wiecki, Sofer, and Frank 2013), but features its own take on model implementation, specifically on the trial-level. The multi-level Bayesian models were inspired by the work of (Vandekerckhove, Tuerlinckx, and Lee 2008).
+This R package implements a framework for fitting (Perceptual) Decision-Making Data with Bayesian Multi-Level Drift Diffusion Models. To this end, the package contains a collection of several Drift Diffusion Models, implemented in the probabilistic programming language Stan (Carpenter et al. 2017). It has been inspired by other packages, like "hBayesDM" (Ahn, Haines, and Zhang 2016) and "HDDM" (Wiecki, Sofer, and Frank 2013), but features its own take on model implementation, specifically on the trial-level. The multi-level Bayesian models are based on the work of (Vandekerckhove, Tuerlinckx, and Lee 2008). The general parameter-structure can be seen in the following directed acyclical graph:
+
+![alt text](./reference/figures/sv.png)
 
 A set of convenience functions for data simulation, model comparison and plotting are also supplied. The aim was to write and test "non-centered" parametrizations (Betancourt and Girolami 2015) of Multi-Level Bayesian models which incorporate inter-trial variabilities and are able to process different amounts of data per subject. The packages' fitting procedure can be also run on servers or clusters. Lastly, it also includes a automated parameter recovery for model testing without experimental data.
 
