@@ -92,11 +92,11 @@ The required columns and names are:
 -   Diffusion Criterion: **crit**
 -   Accuracy (trial answered correctly or not): **cor**
 
-It is possible to fit the models according to a "stimuli-fitting" schema. This means that the decision-making data will be segregated according to which stimuli has been presented in a given trial. If stimuli-fitting is the goal, then the variable **crit** needs to identify each stimuli.
+It is possible to fit the models according to a "stimuli-fitting" schema. This means that the decision-making data will be segregated according to which stimuli has been presented in a given trial. If stimuli-fitting is desired, then the variable **crit** needs to identify each stimuli.
 
-If "Accuracy-fitting" is desired, then the data needs to be segregated according to the accuracy. In this case, the variables **cor** and **crit** will be identical.
+If "Accuracy-fitting" is desired, then the data needs to be segregated according to the accuracy. In this case, the variables **cor** and **crit** need to be identical.
 
-Note that each experimental condition has to be fit independently. You might have to filter your data before continuing, like: `data %>% filter(group == "patient")`.
+Note that each experimental condition has to be fit independently. You might have to filter your data before continuing, for example: `data %<>% filter(group == "patient")`.
 
 StanDDM comes with an example data-set. It can be accessed anytime:
 
@@ -126,11 +126,11 @@ dat <- experimental_data_processing(dat) # Data requires to be formatted for fit
 StanDDM(data = dat, simulation = FALSE , include_models = c('Pure', 'st'))
 ```
 
-The function *StanDDM* above will use the data *dat* to fit 2 models: First, the "Pure" DDM, also featured in the "hBayesDM" package, with no inter-trial variabilities. The second model, features inter-trial variability for the parameter "non-decision time". StanDDM features a total of **8 models** and **custom models can be included**. See the documentation for more details.
+The function *StanDDM* above will use the data *dat* to fit 2 models: First, the "Pure" DDM, also featured in the "hBayesDM" package, with no inter-trial variabilities. The second model, features inter-trial variability for the parameter "non-decision time". StanDDM features a total of **8 models** and **custom models can be included**. See below for more details.
 
-**NOTE:** Depending on your computer and the size of the data set and model choice, compilation and posterior exploration can take a long time.
+**NOTE:** Depending on your computer and the size of the data set and model choice, compilation and posterior exploration can take a long time and/or clog your memory. Save all work before starting any fitting procedures.
 
-The **StanDDM** function saves the resulting stanfit objects in a folder inside your working directory, named after each model, in addition to diagnostic plots and a \*csv file with the extracted parameters for each subject.
+The **StanDDM** function saves the resulting stanfit objects in a folder inside the working directory, named after each model, in addition to diagnostic plots and a \*csv file with the extracted parameters for each subject.
 
 #### Include Custom Models
 
@@ -146,11 +146,11 @@ Custom built models can be included by loading them into the workspace (they can
 StanDDM(data = dat, simulation = FALSE , include_models = c('Custom_regressionDDM'))
 ```
 
-Should a string which cannot be recognized, be included in the 'include\_models' argument, the package first checks if the function cannot be executed with its corresponding arguments. Only if this attempt fails, the 'StanDDM' breaks.
+Should a string which cannot be recognized, be included in the 'include\_models' argument, the package first checks if the function cannot be executed with its corresponding arguments. Only if this attempt fails, the 'StanDDM' function breaks.
 
 #### Run Fitting procedure on Servers/Clusters
 
-Because of the computational intensity of the included models, it is advisable to run them on a external machine. On a unix server, a R script called "run\_models.r" for example, containing the below code has to be provided:
+Because of the computational intensity of the included models, it is advisable to run them on an external machine. On a unix server, a R script called "run\_models.r" for example, containing the below code has to be provided:
 
 ``` r
 library(StanDDM) # This package
@@ -196,7 +196,7 @@ dat <- experimental_data_processing(dat) # Needs to be formatted correctly with 
 Data Fit Assessment
 -------------------
 
-StanDDM provides several way to check how well data has been fitted: plots for visual inspection, R^2 and RMSE. Those functions are used automatically during the fitting procedure, but can also be called seperately. In the below use-case, we have a set of extracted DDM parameters (from any package), and we want to simulate data from those parameters, and compare the result with out experimental data. This is done like follows:
+StanDDM provides several ways to check how well data has been fitted: plots for visual inspection, R^2 and RMSE. Those functions are used automatically during the fitting procedure, but can also be called seperately. In the below use-case, we have a set of extracted DDM parameters (from any package), and we want to simulate data from those parameters to compare the result with our experimental data. This is done as follows:
 
 ``` r
 data <- experimental_data_processing(patients) # Our experimental data
@@ -221,7 +221,7 @@ models_plots(experim_dat, simul_dat) #will create new folder with plots comparin
 Model Comparison
 ----------------
 
-After having fit several models, StanDDM provides 3 measures to compare and rank them: lppd, WAIC and LOO-CV (see (Gelman, Hwang, and Vehtari 2014) for more info). Code from the "LOO" package (<https://github.com/stan-dev/loo>) has been adapted for this functionality. The function "model\_judgement" ranks all included models and compares them via a plot and table. The downside of this function is that all models have to be loaded in memory to be evaluated, which heavily taxes R/R-Studio. This can be fixed, if demanded. Here a example:
+After having fit several models, StanDDM provides 3 measures to compare and rank them: **lppd**, **WAIC** and **LOO-CV** (see (Gelman, Hwang, and Vehtari 2014) for more info). Code from the "LOO" package (<https://github.com/stan-dev/loo>) has been adapted for this purpose. The function "model\_judgement" ranks all included models and compares them via a plot and table. The downside of this operation is that all models have to be loaded in memory to be evaluated, which heavily taxes R/R-Studio. This can be fixed, if demanded. Here an example:
 
 ``` r
 load(fit1.Rdata)
@@ -235,7 +235,7 @@ The function implements a workaround for log-exp underflow values. See the funct
 About
 -----
 
-I developed StanDDM for my masters thesis in Human Machine Communication, Department for Artificial Intelligence (Rijksuniversiteit Groningen) as a external project at the [Laboratory of Cognitive Neuroscience](https://www.epfl.ch/labs/lnco/) (École polytechnique fédérale de Lausanne). I would like to thank my supervisors: Nathan Faivre, Michael Pereira (LNCO) and Marieke Van Vugt (ALICE) for their support and guidance.
+I developed StanDDM for my masters thesis in Human Machine Communication, Department of Artificial Intelligence (Rijksuniversiteit Groningen) as an external project at the [Laboratory of Cognitive Neuroscience](https://www.epfl.ch/labs/lnco/) (École polytechnique fédérale de Lausanne). I would like to thank my supervisors: Nathan Faivre, Michael Pereira (LNCO) and Marieke Van Vugt (ALICE) for their support and guidance.
 
 References
 ==========
