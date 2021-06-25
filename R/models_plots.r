@@ -67,12 +67,12 @@ models_plots <- function(experim_dat, simul_dat, model_name='NAME_UNDEFINED'){
     the_combine$cuants[the_combine$cond=='Data'] <-  experim_dat %>%  
         split(experim_dat$suj) %>%  map(c('rt')) %>%
         map(function(x) {cut(x, breaks = dat_cuants, right=FALSE, na.rm = TRUE)}) %>% 
-        melt() %>%  .$value   
+        as_tibble() %>% tidyr::pivot_longer(cols=everything(), names_to = 'variable', values_to = 'value')  %>%  .$value   
     
     the_combine$cuants[the_combine$cond=='Sim'] <-  simul_dat$data %>%  
         split(simul_dat$data$suj) %>%  map(c('rt')) %>%
         map(function(x) {cut(x, breaks = sim_cuants, right=FALSE, na.rm = TRUE)}) %>% 
-        melt()  %>%  .$value 
+        as_tibble() %>% tidyr::pivot_longer(cols=everything(), names_to = 'variable', values_to = 'value')  %>%  .$value 
     
     the_combine$cuants <- unlist(the_combine$cuants) %>% as.factor()
     the_combine$cor <- as.numeric(levels(the_combine$cor))[the_combine$cor]

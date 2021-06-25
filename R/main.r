@@ -81,7 +81,7 @@ Did you run "experimental_data_processing()" on the data?\n')
             )
         })
 
-        if(!simulation){
+    if(!simulation){
             cat('\nProcessing EXPERIMENTAL data...\n')
         }
         

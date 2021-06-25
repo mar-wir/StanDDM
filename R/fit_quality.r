@@ -28,12 +28,12 @@ fit_quality <- function(experim_dat, simul_dat, model_name='NAME_UNDEFINED'){
         select(-cond) %>%
         split(experim_dat$suj) %>%  map(c('rt')) %>%
         map(function(x) {cut(x, breaks = dat_cuants, right=FALSE, na.rm = TRUE)}) %>%
-        data.table::melt() %>%  .$value
+        as_tibble() %>% tidyr::pivot_longer(cols=everything(), names_to = 'variable', values_to = 'value') %>%  .$value
     
     dat$cuants[dat$cond=='Sim'] <-  simul_dat$data %>%
         split(simul_dat$data$suj) %>%  map(c('rt')) %>%
         map(function(x) {cut(x, breaks = sim_cuants, right=FALSE, na.rm = TRUE)}) %>%
-        data.table::melt()  %>%  .$value
+        as_tibble() %>% tidyr::pivot_longer(cols=everything(), names_to = 'variable', values_to = 'value') %>%  .$value
     
     dat$cuants <- unlist(dat$cuants) %>% as.factor()
     dat$cor <- as.numeric(levels(dat$cor))[dat$cor]

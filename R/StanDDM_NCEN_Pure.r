@@ -6,10 +6,11 @@ StanDDM_NCEN_Pure <- function(simulation, modal, data, control, seed, warmup, nu
     
     if(simulation){
         cat('\nCreating random parameters and simulating Data...\n')
-        fakeParams <- makeFakeParams(nsub = 10, include = c())    
-        fakedat <- simulDat(fakeParams)
+        fakeParams <- makeFakeParams(nsub = 5, include = c())    
+        fakedat <- simulDat(fakeParams, n = 30)
         fakedat <- fakedat[[1]]
         data <- fake_data_processing(fakedat$data)
+        
     }
     
     model_definition <-
@@ -46,7 +47,7 @@ StanDDM_NCEN_Pure <- function(simulation, modal, data, control, seed, warmup, nu
         
         for (i in 1:N) {
             beta[i] = Phi_approx(mu_p[2] + sigma[2] * beta_pr[i]); //Phi approx so bounded between 0 and 1
-            tau[i]  = Phi_approx(mu_p[4] + sigma[4] * tau_pr[i]) * (minRT[N]-RTbound) + RTbound; //non decision time //needs to be necessarily smaller than the RT. The bound makes sure that the sampled min non dec time stays //below the smallest RT by the order of the padding, which gets added after the sampling is done(tis sis why //there is a sum at the end. Phi approx = inverse probit.)
+            tau[i]  = Phi_approx(mu_p[4] + sigma[4] * tau_pr[i]) * (minRT[i]-RTbound) + RTbound; //non decision time //needs to be necessarily smaller than the RT. The bound makes sure that the sampled min non dec time stays //below the smallest RT by the order of the padding, which gets added after the sampling is done(tis sis why //there is a sum at the end. Phi approx = inverse probit.)
         }
         alpha = exp(mu_p[1] + sigma[1] * alpha_pr); //reparametrization as in Gelman manual second ed pg 313 and Kruschkes manual pg. 281
         delta = exp(mu_p[3] + sigma[3] * delta_pr); //exponential link so only positive values, hard limit on 0

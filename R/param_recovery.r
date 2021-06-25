@@ -31,21 +31,15 @@ param_recovery <- function(fit, n_subjects, auth_params, model_name='NAME_UNDEFI
     
     param %<>% map(function(x){as.data.frame(x)}) %>%
         map(function(x){ apply(x, 2, function(y) cumsum(y)/seq_along(y))}) %>%
-        map(unname) %>%
-        map(function(x){data.table::melt(x)}) %>%
-        map(function(x){x[,c('Var2', 'value')]}) %>%
-        map(function(x){x$Var2 <- as.factor(x$Var2); return(x)}) %>%
-        melt()
-    
-    param %<>% select('Var2', 'value', 'L1')
-    
-    param$L1 <- as.factor(param$L1)
-    
-    names(param) <- c('suj', 'value', 'param')
+        map(unname) %>% map(~as_tibble(.x) %>% rename_with(., ~ gsub("V", "", .x, fixed = TRUE))  ) %>% 
+        map(function(x){ x %>% tidyr::pivot_longer(cols=everything(), names_to = 'suj', values_to = 'value')}) %>% 
+        map(function(x){x$suj <- as.factor(x$suj); return(x)}) %>% 
+        bind_rows( .id = "param") %>% mutate(param = as.factor(param))
+        
     
     ##auth param
     tmpa <- c('a', 'v', 't', 'z', 'st', 'sz', 'sv')
-    tmpb <- c('alpha_mu', 'delta_mu', 'tau_mu', 'beta_mu', 'tau_sigma', 'beta_sigma', 'delta_sigma')
+    tmpb <- c('alpha', 'delta', 'tau', 'beta', 'tau_sigma', 'beta_sigma', 'delta_sigma')
     for(.. in 1:length(tmpa)){
         if(tmpa[..] %in% names(auth_params)){
             names(auth_params)[names(auth_params) == tmpa[..]] <- tmpb[..]  
@@ -54,14 +48,13 @@ param_recovery <- function(fit, n_subjects, auth_params, model_name='NAME_UNDEFI
     
     auth_params$suj <- as.factor(seq.int(nrow(auth_params)))
     
-    auth_params %<>% data.table::melt(id.vars='suj')
-    names(auth_params) <- c('suj', 'param', 'value')
+    auth_params %<>%  as_tibble() %>% tidyr::pivot_longer(cols=c(-suj), names_to = 'param', values_to = 'value')
     param %<>% left_join(., auth_params , by=c('suj', 'param') )
     
     dd <- param %>% filter(param!='log_lik' & param!="lp__") %>% group_by(param) %>%  nest() %>%
-        mutate(plot=map2(data, as.list(.$param), ~ggplot(data = .x ) +
-                             geom_line(aes(y=value.x, x=1:length(.x$value.x))) +
-                             geom_line(aes(y=value.y, x=1:length(.x$value.x)), linetype = "dashed", color='red') +
+        mutate(plot=map2(data, param, ~ggplot(data = .x ) +
+                             geom_line(aes(y=value, x=1:length(.x$value))) +
+                             geom_line(aes(y=auth_value, x=1:length(.x$value)), linetype = "dashed", color='red') +
                              theme(legend.position="bottom") +
                              scale_colour_hue(name="Data Types:")  +
                              theme(legend.position="bottom") + facet_wrap(~suj, scales='free') +
@@ -72,10 +65,10 @@ param_recovery <- function(fit, n_subjects, auth_params, model_name='NAME_UNDEFI
                                   caption = 'Note: Warmup iterations not included. The dashed line represents the
                                   parmeter value which generated the data.')))
     
-    walk2(.x = dd$plot, .y = dd$param, 
-          ~ ggsave(device = 'pdf',
-                   scale = 1, width = 12, height = 8, units = c("in"),
-                   filename = paste0(model_name, '/', model_name, '_param_recovery_', .y, ".pdf"), 
-                   plot = .x))
+    # walk2(.x = dd$plot, .y = dd$param, 
+    #       ~ ggsave(device = 'pdf',
+    #                scale = 1, width = 12, height = 8, units = c("in"),
+    #                filename = paste0(model_name, '/', model_name, '_param_recovery_', .y, ".pdf"), 
+    #                plot = .x))
     
 }
