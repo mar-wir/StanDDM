@@ -7,7 +7,7 @@ StanDDM_NCEN_St <- function(simulation, modal, data, control, seed, warmup, num_
     if(simulation){
         cat('\nCreating random parameters and simulating Data...\n')
         fakeParams <- makeFakeParams(nsub = 10, include = c('st'))    #'include' is model dependent!
-        fakedat <- simulDat(fakeParams, n = 100)
+        fakedat <- simulDat(fakeParams, n = 50)
         fakedat <- fakedat[[1]]
         data <- fake_data_processing(fakedat$data)
     }

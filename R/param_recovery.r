@@ -25,13 +25,13 @@ param_recovery <- function(fit, n_subjects, auth_params, model_name='NAME_UNDEFI
     n_chains <- dim(mat)[2]
     
     param <- rstan::extract(fit, permuted=TRUE, inc_warmup=FALSE) %>% map(unname)
-    
-    param <- param[as.vector(map(param, length)==(n_iter*n_subjects*n_chains))]
+    amount_samples <- n_iter*n_subjects*n_chains
+    param <- param[as.vector(map(param, length)==(amount_samples))]
     #filter elements in list with the amount of data only subject-level params have
     
     param %<>% map(function(x){as.data.frame(x)}) %>%
         map(function(x){ apply(x, 2, function(y) cumsum(y)/seq_along(y))}) %>%
-        map(unname) %>% map(~as_tibble(.x) %>% rename_with(., ~ gsub("V", "", .x, fixed = TRUE))  ) %>% 
+        map(~as_tibble(.x) %>% rename_with(., ~ gsub("V", "", .x, fixed = TRUE))  ) %>% 
         map(function(x){ x %>% tidyr::pivot_longer(cols=everything(), names_to = 'suj', values_to = 'value')}) %>% 
         map(function(x){x$suj <- as.factor(x$suj); return(x)}) %>% 
         bind_rows( .id = "param") %>% mutate(param = as.factor(param))
@@ -48,16 +48,16 @@ param_recovery <- function(fit, n_subjects, auth_params, model_name='NAME_UNDEFI
     
     auth_params$suj <- as.factor(seq.int(nrow(auth_params)))
     
-    auth_params %<>%  as_tibble() %>% tidyr::pivot_longer(cols=c(-suj), names_to = 'param', values_to = 'value')
+    auth_params %<>%  as_tibble() %>% tidyr::pivot_longer(cols=c(-suj), names_to = 'param', values_to = 'auth_values')
     param %<>% left_join(., auth_params , by=c('suj', 'param') )
     
     dd <- param %>% filter(param!='log_lik' & param!="lp__") %>% group_by(param) %>%  nest() %>%
         mutate(plot=map2(data, param, ~ggplot(data = .x ) +
-                             geom_line(aes(y=value, x=1:length(.x$value))) +
-                             geom_line(aes(y=auth_value, x=1:length(.x$value)), linetype = "dashed", color='red') +
+                             geom_line(aes(y=value, x=1:amount_samples)) +
+                             geom_line(aes(y=auth_values, x=1:amount_samples), linetype = "dashed", color='red') +
                              theme(legend.position="bottom") +
                              scale_colour_hue(name="Data Types:")  +
-                             theme(legend.position="bottom") + facet_wrap(~suj, scales='free') +
+                             theme(legend.position="bottom") + facet_wrap(~suj) +
                              labs(title = paste('Parameter:', .y, sep=' '),
                                   subtitle = "Parameter recovery per simulated subject",
                                   x = "Iterations",
@@ -65,10 +65,10 @@ param_recovery <- function(fit, n_subjects, auth_params, model_name='NAME_UNDEFI
                                   caption = 'Note: Warmup iterations not included. The dashed line represents the
                                   parmeter value which generated the data.')))
     
-    # walk2(.x = dd$plot, .y = dd$param, 
-    #       ~ ggsave(device = 'pdf',
-    #                scale = 1, width = 12, height = 8, units = c("in"),
-    #                filename = paste0(model_name, '/', model_name, '_param_recovery_', .y, ".pdf"), 
-    #                plot = .x))
+    walk2(.x = dd$plot, .y = dd$param,
+          ~ ggsave(device = 'pdf',
+                   scale = 1, width = 12, height = 8, units = c("in"),
+                   filename = paste0(model_name, '/', model_name, '_param_recovery_', .y, ".pdf"),
+                   plot = .x))
     
 }

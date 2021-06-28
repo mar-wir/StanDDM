@@ -6,5 +6,5 @@ Description: This R package contains a Multi-Level Bayesian fitting procedure fo
 License: MIT
 Encoding: UTF-8
 LazyData: true
-Imports: rstan, data.table, plyr, devtools, tidyverse, magrittr, ggplot2, purrr
+Imports: rstan, plyr, devtools, tidyverse, magrittr, ggplot2, purrr
 RoxygenNote: 6.1.1

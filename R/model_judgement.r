@@ -85,7 +85,8 @@ model_judgement <- function(..., lik_name = "log_lik", impute_inf = TRUE) {
     
     df <- sweep(abs(df), 2, madmax, "/")
     df <- cbind(Model = names(arg), df)
-    molten_df <- melt(df)
+    
+    molten_df <- df %>% tidyr::pivot_longer(cols= -Model, names_to = 'variable', values_to = 'value')
     # pd <- position_dodge(0.05)  #The errorbars overlapped, so use position_dodge to move them horizontally
     plot <- ggplot(molten_df, aes(x=variable, y=value, colour=Model,group=Model)) +
         # geom_errorbar(aes(ymin=value-se, ymax=mean+se), width=.1,position=pd) +

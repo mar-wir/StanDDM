@@ -6,8 +6,8 @@ StanDDM_NCEN_Pure <- function(simulation, modal, data, control, seed, warmup, nu
     
     if(simulation){
         cat('\nCreating random parameters and simulating Data...\n')
-        fakeParams <- makeFakeParams(nsub = 5, include = c())    
-        fakedat <- simulDat(fakeParams, n = 30)
+        fakeParams <- makeFakeParams(nsub = 10, include = c())    
+        fakedat <- simulDat(fakeParams, n = 50)
         fakedat <- fakedat[[1]]
         data <- fake_data_processing(fakedat$data)
         
