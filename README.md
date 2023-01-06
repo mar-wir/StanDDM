@@ -14,6 +14,8 @@ This R package implements a framework for fitting (Perceptual) Decision-Making D
 
 A set of convenience functions for data simulation, model comparison and plotting are also supplied. The aim was to write and test "non-centered" parametrizations (Betancourt and Girolami 2015) of Multi-Level Bayesian models which incorporate inter-trial variabilities and are able to process different amounts of data per subject. The packages' fitting procedure can be also run on servers or clusters. Lastly, it also includes a automated parameter recovery for model testing without experimental data.
 
+**Errata**: The negative signs on `a` and `v` on the lower threshold (when it is 0) intend to singify the direction of drift, not the actual sign of the value of the parameter. In hindsight, a poor choice. 
+
 #### Installation
 
 ``` r
