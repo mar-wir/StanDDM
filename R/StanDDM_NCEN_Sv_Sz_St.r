@@ -82,7 +82,7 @@ StanDDM_NCEN_Sv_Sz_St <- function(simulation, modal, data, control, seed, warmup
             //Subject-level MEANS transformations
         for (i in 1:N) {
             beta_mu[i] = Phi_approx(mu_mu[2] + mu_sigma[2] * beta_mu_pr[i]);
-            tau_mu[i]  = Phi_approx(mu_mu[4] + mu_sigma[4] * tau_mu_pr[i]) * (minRT[N]-RTbound) + RTbound;
+            tau_mu[i]  = Phi_approx(mu_mu[4] + mu_sigma[4] * tau_mu_pr[i]) * (minRT[i]-RTbound) + RTbound;
         }
         
         alpha_mu = exp(mu_mu[1] + mu_sigma[1] * alpha_mu_pr); //reparametrization as in  Gelman manual second ed pg 313 and Kruschkes manual pg. 281
