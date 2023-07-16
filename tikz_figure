@@ -1,0 +1,65 @@
+\begin{figure*}[ht]
+\centering
+\resizebox{1\textwidth}{!}{ %for correct scaling of the graph
+    \begin{tikzpicture}
+    
+        \node[obs](RT) {$\var{RT}_{ij}$};
+        \node[obs, above=of RT,xshift= 5cm, yshift= -0.25cm] (S) {$\var{S}_{ij}$};
+        
+        \node[latent, above=of RT, yshift= 1cm, , xshift= 0.75cm] (v_ij) {$v_{ij}$};
+        \node[latent, above=of v_ij, xshift= -1.5cm] (v_mu) {$v_{\mu_i}$};
+        \node[latent, above=of v_ij, xshift= 1.5cm] (v_sigma) {$v_{\sigma_i}$};
+        \factor[above=of v_ij] {v_ij-f} {right:\scriptsize $exp(v_{\mu_i}+v_{\sigma_i}*v_{ij}')$} {v_mu, v_sigma} {v_ij} 
+        
+        \node[latent, above=of v_mu, xshift= -0.5cm] (v_mu_mu) {$v_{\gamma}$};
+        \node[latent, above=of v_mu, xshift= 0.5cm] (v_mu_sigma) {$v_{\phi}$};
+        \factor[above=of v_mu] {v_mu-f} {right:\scriptsize $exp(v_{\gamma}+a_{\phi}*v_{\mu_i}')$} {v_mu_mu, v_mu_sigma} {v_mu} 
+
+        \node[latent, above=of v_sigma, xshift= -0.5cm] (v_sigma_mu) {$v_{\theta}$};
+        \node[latent, above=of v_sigma, xshift= 0.5cm] (v_sigma_sigma) {$v_{\omega}$};
+        \factor[above=of v_sigma] {v_sigma-f} {right:\scriptsize $exp(v_{\theta}+v_{\omega}*v_{\sigma_i}')$} {v_sigma_mu, v_sigma_sigma} {v_sigma} 
+        \factor[above=of v_mu_mu] {v_mu_mu-f} {above:\scriptsize$\mathcal{N}(0, 1)$} {} {v_mu_mu}   
+        \factor[above=of v_mu_sigma] {v_mu_sigma-f} {above:\scriptsize$\mathcal{C}(0, 5)$} {} {v_mu_sigma} 
+        \factor[above=of v_sigma_mu] {v_sigma_mu-f} {above:\scriptsize$\mathcal{N}(0, 1)$} {} {v_sigma_mu}   
+        \factor[above=of v_sigma_sigma] {v_sigma_sigma-f} {above:\scriptsize$\mathcal{C}(0, 5)$} {} {v_sigma_sigma}
+
+        \node[latent, right=of v_sigma, xshift= 1.5cm] (a_i) {$a_i$};
+        \node[latent, above=of a_i, xshift= -0.5cm] (a_mu) {$a_{\mu}$};
+        \node[latent, above=of a_i, xshift= 0.5cm] (a_sigma) {$a_{\sigma}$};
+        \factor[above=of a_i] {a_i-f} {right:\scriptsize $exp(a_{\mu}+a_{\sigma}*a_i')$} {a_mu, a_sigma} {a_i} 
+        \factor[above=of a_mu] {a_mu-f} {above:\scriptsize$\mathcal{N}(0, 1)$} {} {a_mu}          
+        \factor[above=of a_sigma] {a_sigma-f} {above:\scriptsize$\mathcal{C}(0, 5)$} {} {a_sigma} 
+        
+        \node[latent, left=of v_mu, xshift= -0.75cm] (t_i) {$t_i$};
+        \node[latent, above=of t_i, xshift= -0.5cm] (t_mu) {$t_{\mu}$};
+        \node[latent, above=of t_i, xshift= 0.5cm] (t_sigma) {$t_{\sigma}$};
+        \factor[above=of t_i] {t_i-f} {right:\scriptsize $\Phi(t_{\mu}+t_{\sigma}*t_i')$} {t_mu, t_sigma} {t_i}
+        \factor[above=of t_mu] {t_mu-f} {above:\scriptsize$\mathcal{N}(0, 1)$} {} {t_mu}          
+        \factor[above=of t_sigma] {t_sigma-f} {above:\scriptsize$\mathcal{C}(0, 5)$} {} {t_sigma} 
+        
+        \node[latent, left=of t_i, xshift= -0.75cm] (z_i) {$z_i$};
+        \node[latent, above=of z_i, xshift= -0.6cm] (z_mu) {$z_{\mu}$};
+        \node[latent, above=of z_i, xshift= 0.6cm] (z_sigma) {$z_{\sigma}$};
+        \factor[above=of z_i] {z_i-f} {right:\scriptsize $\Phi(z_{\mu}+z_{\sigma}*z_i')$} {z_mu, z_sigma} {z_i}  
+        \factor[above=of z_mu] {z_mu-f} {above:\scriptsize$\mathcal{N}(0, 1)$} {} {z_mu}          
+        \factor[above=of z_sigma] {z_sigma-f} {above:\scriptsize$\mathcal{C}(0, 5)$} {} {z_sigma}          
+        
+        \factor[above=of RT, xshift= 1.5cm, yshift= 0.5cm] {A} {right:$\mathcal{W}(a_i, v_{ij}, z_i, t_i)$} {} {RT}; 
+        \factor[above=of RT, xshift= -1.5cm, yshift= 0.5cm] {T} {left:$\mathcal{W}(-a_i, -v_{ij}, z_i, t_i)$} {} {RT};
+                  
+        \vgate {criterion} %gate
+            {(A)(A-caption)} { $S=0$} %left
+            {(T)(T-caption)} { $S=1$} %right
+            {S,v_ij, a_i, t_i, z_i} ; %input
+      
+        \plate{trials} {(criterion) (RT) (S) (v_ij) 
+        (v_ij-f)(v_ij-f-caption)} {$\forall j \in \{1...N\}$} 
+        
+        \plate{subjects} {(criterion) (RT) (S) (v_ij) 
+        (v_ij-f)(v_ij-f-caption)
+        (trials-caption) (z_i-f-caption) (z_i-f) (z_i)
+        (a_i-f-caption) (a_i-f)
+        } {$\forall i \in \{1...M\}$}
+ 
+    \end{tikzpicture}
+    }
