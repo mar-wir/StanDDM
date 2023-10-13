@@ -236,6 +236,11 @@ model_judgement(fit1, fit2, impute_inf = TRUE)
 
 The function implements a workaround for log-exp underflow values. See the function documentation for more information.
 
+Priors
+-----
+
+Please reason about the priors that make most sense in your setting and adapt the models accordingly!
+
 About
 -----
 

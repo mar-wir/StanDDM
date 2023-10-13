@@ -66,7 +66,7 @@ fit_quality <- function(experim_dat, simul_dat, model_name='NAME_UNDEFINED'){
         dplyr::summarise(mean = mean(rt)) %>% 
         ungroup() %>%
         spread(cond,mean) %>%
-        nest(-cor) %>%
+        nest(data=c(-cor)) %>%
         mutate(data = map(data, ~ rmse(as.data.frame(.x)))) %>%
         mutate(data = unlist(data)) %>%
         pull(data)
@@ -75,7 +75,7 @@ fit_quality <- function(experim_dat, simul_dat, model_name='NAME_UNDEFINED'){
         dplyr::summarise(mean = mean(rt)) %>% 
         ungroup() %>%
         spread(cond,mean) %>%
-        nest(-cor) %>%
+        nest(data=c(-cor)) %>%
         mutate(data = map(data, ~ summary(lm(data=as.data.frame(.x), Data~Sim))$adj.r.squared)) %>%
         mutate(data = unlist(data)) %>%
         pull(data) 

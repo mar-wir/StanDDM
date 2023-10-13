@@ -42,8 +42,8 @@ models_plots <- function(experim_dat, simul_dat, model_name='NAME_UNDEFINED'){
     plot2tmp <- the_combine
     plot2tmp$rt[plot2tmp$cor==0] <- plot2tmp$rt[plot2tmp$cor==0] *-1
     plot2 <-  ggplot() +
-        geom_density(aes(x=rt,y=..density..,color=cond),data=plot2tmp) +
-        # geom_density(aes(x=value,y=..density..,color=cond),data=c) +
+        geom_density(aes(x=rt,y=after_stat(!!str2lang("density")),color=cond),data=plot2tmp) +
+         # geom_density(aes(x=value,y=after_stat(!!str2lang("density")),color=cond),data=c) +
         facet_wrap(~plot2tmp$suj) +
         labs(title = paste(model_name),
              subtitle = "Comparison of Data and Simulated RTs",
