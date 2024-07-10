@@ -19,7 +19,7 @@ A set of convenience functions for data simulation, model comparison and plottin
 #### Installation
 
 ``` r
-devtools::install_github('https://github.com/Seneketh/StanDDM.git', ref = 'master')
+devtools::install_github('https://github.com/mar-wir/StanDDM.git', ref = 'master')
 ```
 
 #### Un-install
